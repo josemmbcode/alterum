@@ -9,6 +9,7 @@ import {
 import styles from "./tailwind.css";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
+import Footer from "./components/Footer";
 
 export default function App() {
   return (
@@ -19,10 +20,13 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
-        <Header/>
-        <Sidebar/>
-        <Outlet />
+      <body className="bg-[url('/images/bg.png')]  h-full bg-cover">
+        <Header />
+        <Sidebar />
+        <div className="min-h-screen">
+          <Outlet />
+        </div>
+        <Footer />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

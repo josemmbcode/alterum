@@ -11,6 +11,7 @@ module.exports = {
         morado: "#9C2880",
         verde: "#018875",
         celeste: "#00B4AF",
+        negro: "#303030",
       },
     },
   },
