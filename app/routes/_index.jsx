@@ -3,6 +3,7 @@ export const meta = () => {
 };
 import Presentation from "~/components/Presentation";
 import Products from "~/components/Products";
+import { createUserSession, getUserFromSession } from "~/data/sessions";
 export default function Index() {
   return (
     <>
@@ -10,4 +11,8 @@ export default function Index() {
       <Products />
     </>
   );
+}
+
+export async function loader({ request }) {
+  return await getUserFromSession(request);
 }

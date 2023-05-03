@@ -8,10 +8,12 @@ const DUMMY_PRODUCTS = [
 ];
 function Products() {
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-      {DUMMY_PRODUCTS.map((product) => (
-        <ProductItem img={product.img} price={product.price} key={product.id} />
-      ))}
+    <div className="flex justify-center bg-rose-200">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+        {DUMMY_PRODUCTS.map((product) => (
+          <ProductItem img={product.img} price={product.price} key={product.id} />
+        ))}
+      </div>
     </div>
   );
 }
