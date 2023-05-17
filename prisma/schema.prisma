@@ -31,6 +31,6 @@ model CartItem {
   price     Float
   quantity  Int
   total     Float
-  Cart      Cart   @relation(fields: [cartId], references: [id])
-  cartId    String @db.ObjectId
+  Cart      Cart   @relation(fields: [cartId], references: [sessionId])
+  cartId    String
 }

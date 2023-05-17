@@ -50,3 +50,4 @@ export async function getUserFromSession(request) {
   console.log(userId)
   return userId;
 }
+
