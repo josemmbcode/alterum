@@ -4,6 +4,7 @@ import { createCart } from "~/data/products.server";
 import { createCartItem } from "~/data/products.server";
 import { getCart } from "~/data/products.server";
 import { getUserFromSession } from "~/data/sessions";
+import { redirect } from "@remix-run/node";
 const Product = () => {
   const loader = useLoaderData();
   return (
@@ -25,9 +26,12 @@ const Product = () => {
 
 export default Product;
 
-export async function loader({ params }) {
+export async function loader({request, params }) {
   const id = params.productId;
   const product = await getProduct(id);
+  const sessionId = await getUserFromSession(request)
+  const cart = await getCart(sessionId)
+  console.log(cart)
   return product;
 }
 
@@ -43,4 +47,5 @@ export async function action({ request }) {
     +productData.quantity,
     +productData.total
   );
+  return redirect('/')
 }

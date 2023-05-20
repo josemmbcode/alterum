@@ -11,8 +11,8 @@ function Presentation() {
           </h1>
         </div>
       </div> */}
-      <div className="flex justify-center items-center h-[50vh] text-center">
-        <div className="bg-opacity-60 bg-white border border-celeste rounded-lg p-10 text-center mx-4 sm:mx-80">
+      <div className="flex justify-center items-center text-center my-4">
+        <div className="bg-opacity-60 bg-white border border-celeste rounded-lg p-10 text-center mx-4 sm:mx-80 w-full sm:w-1/2">
           <h1 className="font-raleway text-2xl text-morado">SOBRE ALTERUM</h1>
           <p className="text-negro font-raleway">
             Todos los diseños de Alterum son pensados, creados y diseñados a

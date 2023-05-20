@@ -47,7 +47,6 @@ export async function getUserFromSession(request) {
     return await createUserSession();
   }
 
-  console.log(userId)
   return userId;
 }
 

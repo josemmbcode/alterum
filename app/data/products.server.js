@@ -25,16 +25,35 @@ export async function createCart(id) {
 
 export async function getCart(id) {
   try {
-    await prisma.cart.findFirst({
-      data: {
+    return await prisma.cart.findFirst({
+      where: {
         sessionId: id,
+      },
+      include: {
+        items: true,
       },
     });
   } catch (error) {
     console.log(error);
-    throw new Error("Failed to create cart");
+    throw new Error("Failed to retrieve cart");
   }
 }
+
+async function addCartItem(productId, value) {
+  try {
+    return await prisma.cartItem.update({
+      data: {
+        quantity: value,
+      },
+      where: {
+        id: productId,
+      },
+    });
+  } catch (error) {
+    throw new Error("Ha ocurrido un error al agregar. Por favor intente luego.");
+  }
+}
+
 export async function createCartItem(
   cartId,
   productId,
@@ -43,20 +62,25 @@ export async function createCartItem(
   quantity,
   total
 ) {
-  const cartItem = await prisma.cartItem.create({
-    data: {
-      Cart: {
-        connect: {
-          sessionId: cartId,
-        },
-      },
-      productId,
-      name,
-      price,
-      quantity,
-      total,
-    },
-  });
+  const cart = await getCart(cartId);
+  const existingItem = cart.items.find((item) => item.productId === productId);
 
-  return cartItem;
+  if (existingItem) {
+    addCartItem(existingItem.id, existingItem.quantity + 1);
+  } else {
+    return await prisma.cartItem.create({
+      data: {
+        Cart: {
+          connect: {
+            sessionId: cartId,
+          },
+        },
+        productId,
+        name,
+        price,
+        quantity,
+        total,
+      },
+    });
+  }
 }
