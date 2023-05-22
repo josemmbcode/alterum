@@ -50,7 +50,9 @@ async function addCartItem(productId, value) {
       },
     });
   } catch (error) {
-    throw new Error("Ha ocurrido un error al agregar. Por favor intente luego.");
+    throw new Error(
+      "Ha ocurrido un error al agregar. Por favor intente luego."
+    );
   }
 }
 
@@ -82,5 +84,16 @@ export async function createCartItem(
         total,
       },
     });
+  }
+}
+
+export async function getOrCreateCart(id) {
+  let cart = await getCart(id);
+
+  if (cart) {
+    return cart;
+  } else {
+    cart = await createCart(id);
+    return cart;
   }
 }
