@@ -27,7 +27,7 @@ export async function createUserSession(remember) {
   const userId = `guest-${crypto.randomUUID()}`
   session.set(USER_SESSION_KEY, userId);
 
-  return redirect('/', {
+   redirect('/', {
     headers: {
       "Set-Cookie": await sessionStorage.commitSession(session, {
         maxAge: remember ? 60 * 60 * 24 * 7 : undefined,
@@ -42,11 +42,10 @@ export async function getUserFromSession(request) {
   );
 
   const userId = session.get(USER_SESSION_KEY);
-
-  if (!userId) {
-    return await createUserSession();
+  
+  if (!userId){
+    return null
   }
-
   return userId;
 }
 
