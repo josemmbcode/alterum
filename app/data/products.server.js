@@ -12,7 +12,7 @@ export async function getProduct(id) {
 
 export async function createCart(id) {
   try {
-    await prisma.cart.create({
+    return await prisma.cart.create({
       data: {
         sessionId: id,
       },

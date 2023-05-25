@@ -1,16 +1,18 @@
 export const meta = () => {
   return [{ title: "ALTERUM" }];
 };
-import { redirect } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import Presentation from "~/components/Presentation";
 import Products from "~/components/Products";
 import { getOrCreateCart } from "~/data/products.server";
 import { useLoaderData } from "@remix-run/react";
-import { createUserSession, getUserFromSession } from "~/data/sessions";
+import crypto from "crypto";
+import {
+  getUserFromSession,
+  sessionStorage,
+} from "~/data/sessions";
 export default function Index() {
-  const loader = useLoaderData(
-  )
-  console.log(loader)
+  const loader = useLoaderData();
   return (
     <>
       <Presentation />
@@ -22,9 +24,21 @@ export default function Index() {
 export async function loader({ request }) {
   const id = await getUserFromSession(request);
 
-  if (id){
-    return getOrCreateCart(id)
+  if (id) {
+    return getOrCreateCart(id);
   } else {
-    return null
+    const session = await sessionStorage.getSession();
+    const userId = crypto.randomUUID();
+    session.set("userId", userId);
+    return json(
+      { cart: "created" },
+      {
+        headers: {
+          "Set-Cookie": await sessionStorage.commitSession(session, {
+            maxAge: 60 * 60 * 24 * 7,
+          }),
+        },
+      }
+    );
   }
 }

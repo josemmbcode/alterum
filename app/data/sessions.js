@@ -1,7 +1,6 @@
 import { createCookieSessionStorage, redirect } from "@remix-run/node";
 import invariant from "tiny-invariant";
 import crypto from "crypto";
-import { prisma } from "./database.server";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
@@ -19,21 +18,20 @@ export const sessionStorage = createCookieSessionStorage({
 
 const { commitSession } = sessionStorage;
 export { commitSession };
-
+const { getSession } = sessionStorage;
+export { getSession };
 const USER_SESSION_KEY = "userId";
 
 export async function createUserSession(remember) {
   const session = await sessionStorage.getSession();
-  const userId = `guest-${crypto.randomUUID()}`
+  const userId = `guest-${crypto.randomUUID()}`;
   session.set(USER_SESSION_KEY, userId);
 
-   redirect('/', {
-    headers: {
-      "Set-Cookie": await sessionStorage.commitSession(session, {
-        maxAge: remember ? 60 * 60 * 24 * 7 : undefined,
-      }),
-    },
+  const cookieHeader = await sessionStorage.commitSession(session, {
+    maxAge: remember ? 60 * 60 * 24 * 7 : undefined,
   });
+
+  return cookieHeader
 }
 
 export async function getUserFromSession(request) {
@@ -42,10 +40,9 @@ export async function getUserFromSession(request) {
   );
 
   const userId = session.get(USER_SESSION_KEY);
-  
-  if (!userId){
-    return null
+
+  if (!userId) {
+    return null;
   }
   return userId;
 }
-
