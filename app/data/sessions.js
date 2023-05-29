@@ -20,7 +20,7 @@ const { commitSession } = sessionStorage;
 export { commitSession };
 const { getSession } = sessionStorage;
 export { getSession };
-const USER_SESSION_KEY = "userId";
+export const USER_SESSION_KEY = "userId";
 
 export async function createUserSession(remember) {
   const session = await sessionStorage.getSession();

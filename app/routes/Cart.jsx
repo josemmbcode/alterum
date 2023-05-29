@@ -1,27 +1,10 @@
 import React from "react";
-
+import { getCart } from "~/data/products.server";
+import { getUserFromSession } from "~/data/sessions";
+import { useLoaderData } from "@remix-run/react";
 const ShoppingCart = () => {
-  const products = [
-    {
-      imageUrl: "https://dummyimage.com/200x200",
-      name: "Product 1",
-      quantity: 2,
-      total: 19.99,
-    },
-    {
-      imageUrl: "https://dummyimage.com/200x200",
-      name: "Product 2",
-      quantity: 1,
-      total: 9.99,
-    },
-    {
-      imageUrl: "https://dummyimage.com/200x200",
-      name: "Product 3",
-      quantity: 3,
-      total: 29.99,
-    },
-  ];
-
+  const loader = useLoaderData()
+  const products = loader.items
   return (
     <div className="flex flex-col bg-white">
       <div className="flex items-center">
@@ -35,12 +18,12 @@ const ShoppingCart = () => {
           <p className="text-sm font-medium text-center">Total</p>
         </div>
       </div>
-      {products.map((item, index) => (
-        <div key={index} className="flex items-center mb-4">
+      {products.map((item) => (
+        <div key={item.id} className="flex items-center mb-4">
           <div className="flex-1 flex items-center">
             <div className="w-32 h-32">
               <img
-                src={item.imageUrl}
+                src="https://dummyimage.com/200x200"
                 alt={item.name}
                 className="w-full h-full object-cover rounded"
               />
@@ -68,3 +51,9 @@ const ShoppingCart = () => {
 };
 
 export default ShoppingCart;
+
+export async function loader({request}){
+  const id = await getUserFromSession(request)
+  const cart = await getCart(id)
+  return cart
+}

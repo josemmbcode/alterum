@@ -1,10 +1,12 @@
-import { getProduct } from "~/data/products.server";
+import { createCart, getProduct } from "~/data/products.server";
 import { Form, useLoaderData } from "@remix-run/react";
-import { createCart } from "~/data/products.server";
 import { createCartItem } from "~/data/products.server";
-import { getCart } from "~/data/products.server";
 import { getUserFromSession } from "~/data/sessions";
 import { redirect } from "@remix-run/node";
+import { sessionStorage } from "~/data/sessions";
+import { USER_SESSION_KEY } from "~/data/sessions";
+import crypto from "crypto";
+import { getProductInformation } from "~/data/utils.server";
 const Product = () => {
   const loader = useLoaderData();
   return (
@@ -26,19 +28,36 @@ const Product = () => {
 
 export default Product;
 
-export async function loader({request, params }) {
+export async function loader({ request, params }) {
   const id = params.productId;
   const product = await getProduct(id);
-  const sessionId = await getUserFromSession(request)
-  const cart = await getCart(sessionId)
-  console.log(cart)
   return product;
 }
 
 export async function action({ request }) {
-  const sessionId = await getUserFromSession(request);
-  const formData = await request.formData();
-  const productData = Object.fromEntries(formData);
+  let sessionId = await getUserFromSession(request);
+  const productData = await getProductInformation(request);
+  if (!sessionId) {
+    sessionId = `guest-${crypto.randomUUID()}`;
+    await createCart(sessionId);
+    const session = await sessionStorage.getSession();
+    session.set(USER_SESSION_KEY, sessionId);
+    await createCartItem(
+      sessionId,
+      productData.productId,
+      productData.name,
+      +productData.price,
+      +productData.quantity,
+      +productData.total
+    );
+    return redirect("/", {
+      headers: {
+        "Set-Cookie": await sessionStorage.commitSession(session, {
+          maxAge: 60 * 60 * 24 * 7,
+        }),
+      },
+    });
+  }
   await createCartItem(
     sessionId,
     productData.productId,
@@ -47,5 +66,5 @@ export async function action({ request }) {
     +productData.quantity,
     +productData.total
   );
-  return redirect('/')
+  return redirect("/");
 }
