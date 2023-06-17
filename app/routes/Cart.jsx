@@ -3,8 +3,8 @@ import { getCart } from "~/data/products.server";
 import { getUserFromSession } from "~/data/sessions";
 import { useLoaderData } from "@remix-run/react";
 const ShoppingCart = () => {
-  const loader = useLoaderData()
-  const products = loader.items
+  const loader = useLoaderData();
+  const products = loader? loader.items : null;
   return (
     <div className="flex flex-col bg-white">
       <div className="flex items-center">
@@ -18,7 +18,7 @@ const ShoppingCart = () => {
           <p className="text-sm font-medium text-center">Total</p>
         </div>
       </div>
-      {products.map((item) => (
+      {products ? products.map((item) => (
         <div key={item.id} className="flex items-center mb-4">
           <div className="flex-1 flex items-center">
             <div className="w-32 h-32">
@@ -45,15 +45,22 @@ const ShoppingCart = () => {
             </p>
           </div>
         </div>
-      ))}
+      )) : <p>none</p>}
     </div>
   );
 };
 
 export default ShoppingCart;
 
-export async function loader({request}){
-  const id = await getUserFromSession(request)
-  const cart = await getCart(id)
-  return cart
+export async function loader({ request }) {
+  const id = await getUserFromSession(request);
+  if (!id){
+    return null
+  }
+  const cart = await getCart(id);
+  if (cart) {
+    return cart;
+  } else {
+    return null;
+  }
 }

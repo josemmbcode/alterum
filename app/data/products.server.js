@@ -10,6 +10,16 @@ export async function getProduct(id) {
   }
 }
 
+export async function getAllProducts() {
+  try {
+    const product = await prisma.product.findMany();
+    return product;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to get products");
+  }
+}
+
 export async function createCart(id) {
   try {
     return await prisma.cart.create({

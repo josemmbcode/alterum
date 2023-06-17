@@ -45,6 +45,9 @@ const Sidebar = () => {
           <div>
             <Link to={"/"}>Contacto</Link>
           </div>
+          <div>
+            <Link to={"/"}>Carrito</Link>
+          </div>
         </div>
       </div>
     </div>
