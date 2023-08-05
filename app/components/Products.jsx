@@ -11,7 +11,7 @@ function Products() {
   const loader = useLoaderData()
   console.log(loader)
   return (
-    <div className="flex justify-center bg-rose-200">
+    <div className="flex justify-center bg-celeste">
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
         {loader.map((product) => (
           <ProductItem img={product.imgUrl} price={product.price} id={product.id} key={product.id} />

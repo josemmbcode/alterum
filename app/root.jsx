@@ -23,7 +23,7 @@ export default function App() {
       <body className="bg-[url('/images/bg.png')]  h-full bg-cover">
         <Header />
         <Sidebar />
-        <div className="min-h-screen">
+        <div>
           <Outlet />
         </div>
         <Footer />

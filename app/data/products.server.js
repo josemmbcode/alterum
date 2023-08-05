@@ -2,7 +2,7 @@ import { prisma } from "./database.server";
 
 export async function getProduct(id) {
   try {
-    const product = await prisma.product.findFirst({ where: { id } });
+    const product = await prisma.product.findFirst({ where: { id: +id } });
     return product;
   } catch (error) {
     console.log(error);
@@ -49,7 +49,7 @@ export async function getCart(id) {
   }
 }
 
-async function addCartItem(productId, value) {
+async function addCartItem(productId, value, total) {
   try {
     return await prisma.cartItem.update({
       data: {

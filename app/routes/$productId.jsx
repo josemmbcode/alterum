@@ -85,7 +85,7 @@ const Product = () => {
 
 export default Product;
 
-export async function loader({ request, params }) {
+export async function loader({ params }) {
   const id = params.productId;
   const product = await getProduct(id);
   return product;
@@ -123,5 +123,5 @@ export async function action({ request }) {
     +productData.quantity,
     +productData.total
   );
-  return redirect("/");
+  return redirect("/cart");
 }
